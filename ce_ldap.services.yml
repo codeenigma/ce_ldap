@@ -1,0 +1,20 @@
+services:
+  ce_ldap.settings:
+    class: Drupal\ce_ldap\Ldap\LdapSettings
+    arguments: ['@settings']
+
+  ce_ldap.connection:
+    class: Drupal\ce_ldap\Ldap\LdapConnection
+    arguments: ['@ce_ldap.settings']
+
+  ce_ldap.server:
+    class: Drupal\ce_ldap\Ldap\LdapServer
+    arguments: ['@ce_ldap.connection']
+
+  ce_ldap.user_service:
+    class: Drupal\ce_ldap\Service\LdapUserService
+    arguments: ['@ce_ldap.server', '@messenger','@password_generator', '@password']
+
+  ce_ldap.group_service:
+    class: Drupal\ce_ldap\Service\LdapGroupService
+    arguments: ['@ce_ldap.server']

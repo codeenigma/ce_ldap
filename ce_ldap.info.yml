@@ -1,0 +1,6 @@
+name: Code Enigma LDAP
+description: Provides an abstraction layer over LDAP.
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9 || ^10
+package: Code Enigma
