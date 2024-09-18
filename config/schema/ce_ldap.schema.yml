@@ -3,6 +3,9 @@ ce_ldap.settings:
   type: config_object
   label: 'Code Enigma LDAP settings'
   mapping:
+    domain_component_root:
+      type: string
+      label: 'Domain Component Root'
     group_commonname:
       type: string
       label: 'Group Common Name'
@@ -12,6 +15,9 @@ ce_ldap.settings:
     people_base:
       type: string
       label: 'People Base'
+    disabled_users_base:
+      type: string
+      label: 'Disabled Users Base'
     get_all_groups_filter:
       type: string
       label: 'Get All Groups Filter'

@@ -19,8 +19,14 @@ class LdapGroupService extends AbstractLdapService {
    */
   protected $group_base;
 
+  /**
+   * @var array|mixed|null
+   */
   protected $all_groups_filter;
 
+  /**
+   * @var array|mixed|null
+   */
   protected $admin_group_filter;
 
   /**
