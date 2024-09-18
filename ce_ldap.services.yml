@@ -17,4 +17,4 @@ services:
 
   ce_ldap.group_service:
     class: Drupal\ce_ldap\Service\LdapGroupService
-    arguments: ['@ce_ldap.server']
+    arguments: ['@ce_ldap.server', '@config.factory']

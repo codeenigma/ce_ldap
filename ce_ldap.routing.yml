@@ -1,0 +1,7 @@
+ce_ldap.ldap_settings:
+  path: 'admin/config/people/ce_ldap-settings'
+  defaults:
+    _title: 'Ldap settings'
+    _form: 'Drupal\ce_ldap\Form\LdapSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

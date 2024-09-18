@@ -40,8 +40,7 @@ class LdapConnection {
    *   A instance of LdapSettings.
    */
   public function __construct(LdapSettings $settings) {
-    // ToDO Make port here configurable via $settings.
-    $connection = ldap_connect($settings->getHost(), 636);
+    $connection = ldap_connect($settings->getldapuri());
 
     if ($connection === FALSE) {
       throw new \RuntimeException('Could not connect to the LDAP server.');

@@ -1,0 +1,6 @@
+group_commonname: 'cn=%s,ou=Groups,dc=codeenigma,dc=com'
+group_base: 'ou=Groups,dc=codeenigma,dc=com'
+people_base: 'ou=People,dc=codeenigma,dc=com'
+get_all_groups_filter: '(&(!(cn=*Admins))(!(cn=*Users))(!(cn=*Security))(!(cn=*Developers)))'
+admin_group_filter: '(&(memberUid=%s)(|(cn=ceAdmins)(cn=ceSecurity)(cn=ceDevelopers)))'
+excluded_admin_groups_for_user: "(!(cn=*Admins))\r\n(!(cn=*Users))\r\n(!(cn=*Security))\r\n(!(cn=*Developers))"

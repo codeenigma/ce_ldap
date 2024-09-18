@@ -1,0 +1,4 @@
+ce_ldap.ldap_settings:
+  title: Ldap settings
+  route_name: ce_ldap.ldap_settings
+  weight: 10

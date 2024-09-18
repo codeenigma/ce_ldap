@@ -19,6 +19,13 @@ final class LdapSettings {
   private string $host;
 
   /**
+   * The LDAP server port.
+   *
+   * @var int The LDAP server port.
+   */
+  private int $port;
+
+  /**
    * The distinguished name for the the bind.
    *
    * @var string
@@ -38,6 +45,7 @@ final class LdapSettings {
    * @param \Drupal\Core\Site\Settings $settings
    *   Settings should include an array, keyed as follows:
    *   - $settings['ldap']['host'] = 'host';
+   *   - $settings['ldap']['port'] = 636;
    *   - $settings['ldap']['dn'] = 'dn';
    *   - $settings['ldap']['password'] = 'password';.
    *
@@ -51,6 +59,7 @@ final class LdapSettings {
     }
 
     $this->host = self::extractHostSetting($ldapSettings);
+    $this->port = self::extractPortSetting($ldapSettings);
     $this->bindDistinguishedName = self::extractBindDistinguishedNameSetting($ldapSettings);
     $this->bindPassword = self::extractBindPasswordSetting($ldapSettings);
   }
@@ -63,6 +72,10 @@ final class LdapSettings {
    */
   public function getHost() : string {
     return $this->host;
+  }
+
+  public function getldapuri() : string {
+    return $this->host . ':' . $this->port;
   }
 
   /**
@@ -111,6 +124,21 @@ final class LdapSettings {
     }
 
     return $host;
+  }
+
+  private static function extractPortSetting(array $ldapSettings) : int {
+    if (!array_key_exists('port', $ldapSettings)) {
+      throw new \RuntimeException('LDAP settings must include the LDAP port, keyed: port.');
+    }
+
+    /** @var int $port */
+    $port = (int) $ldapSettings['port'];
+
+    if ($port <= 0 || $port > 65535) {
+      throw new \RuntimeException('LDAP port setting must be a valid port number.');
+    }
+
+    return $port;
   }
 
   /**
