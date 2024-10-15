@@ -1,0 +1,6 @@
+{
+    "name": "codeenigma/ce_ldap",
+    "type": "drupal-module",
+    "description": "Drupal module providing a base for LDAP connectivity and synchronisation.",
+    "license": "MIT"
+}
