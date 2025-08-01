@@ -26,7 +26,7 @@ final class LdapSettings {
   private int $port;
 
   /**
-   * The distinguished name for the the bind.
+   * The distinguished name for the bind.
    *
    * @var string
    */
