@@ -105,7 +105,7 @@ final class LdapSettings {
   }
 
   /**
-   * Extract the host setting from the LDAP settings array.
+   * Extract the host settings from the LDAP settings array.
    *
    * @param array<string, string> $ldapSettings
    *   An array of LDAP settings.
