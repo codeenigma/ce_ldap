@@ -86,13 +86,6 @@ final class LdapSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
-    parent::validateForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->config('ce_ldap.settings')
       ->set('domain_component_root', $form_state->getValue('domain_component_root'))
