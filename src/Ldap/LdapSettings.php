@@ -133,7 +133,7 @@ final class LdapSettings {
   }
 
   /**
-   * Extract the port settin from the LDAP settings.
+   * Extract the port setting from the LDAP settings.
    *
    * @param array $ldapSettings
    *   The ldap settings.
