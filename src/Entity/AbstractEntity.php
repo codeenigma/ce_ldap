@@ -49,10 +49,7 @@ abstract class AbstractEntity {
    * Get off the grass, use the static constructor.
    *
    * @param \Drupal\ce_ldap\Dto\LdapDto $dto
-   *   A LDAP DTO object.
-   *
-   * @return UserInterface
-   *   An instance of this class.
+   *   An LDAP DTO object.
    */
   final private function __construct(LdapDto $dto) {
     $this->dto = $dto;

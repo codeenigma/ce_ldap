@@ -21,12 +21,12 @@ final class LdapSettings {
   /**
    * The LDAP server port.
    *
-   * @var int The LDAP server port.
+   * @var int The LDAP server port
    */
   private int $port;
 
   /**
-   * The distinguished name for the the bind.
+   * The distinguished name for the bind.
    *
    * @var string
    */
@@ -74,6 +74,12 @@ final class LdapSettings {
     return $this->host;
   }
 
+  /**
+   * Get the LDAP URL.
+   *
+   * @return string
+   *   The LDAP URL.
+   */
   public function getldapuri() : string {
     return $this->host . ':' . $this->port;
   }
@@ -99,7 +105,7 @@ final class LdapSettings {
   }
 
   /**
-   * Extract the host setting from the LDAP settings array.
+   * Extract the host settings from the LDAP settings array.
    *
    * @param array<string, string> $ldapSettings
    *   An array of LDAP settings.
@@ -126,6 +132,15 @@ final class LdapSettings {
     return $host;
   }
 
+  /**
+   * Extract the port setting from the LDAP settings.
+   *
+   * @param array $ldapSettings
+   *   The ldap settings.
+   *
+   * @return int
+   *   The port number.
+   */
   private static function extractPortSetting(array $ldapSettings) : int {
     if (!array_key_exists('port', $ldapSettings)) {
       throw new \RuntimeException('LDAP settings must include the LDAP port, keyed: port.');

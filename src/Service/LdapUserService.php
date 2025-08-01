@@ -41,11 +41,26 @@ class LdapUserService extends AbstractLdapService {
    */
   protected PasswordInterface $password;
 
-  protected $domain_component_root;
+  /**
+   * The domain component root configuration item.
+   *
+   * @var array|mixed|null
+   */
+  protected $domainComponentRoot;
 
-  protected $people_base;
+  /**
+   * The people base configuration item.
+   *
+   * @var array|mixed|null
+   */
+  protected $peopleBase;
 
-  protected $disabled_users_base;
+  /**
+   * The disabled users base configuration item.
+   *
+   * @var array|mixed|null
+   */
+  protected $disabledUsersBase;
 
   /**
    * LdapUserService constructor.
@@ -58,18 +73,21 @@ class LdapUserService extends AbstractLdapService {
    *   An instance of Drupal password generator service.
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   An instance of Drupal password service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
   final public function __construct(
     LdapServerInterface $ldapServer,
     MessengerInterface $messenger,
     PasswordGeneratorInterface $passwordGenerator,
     PasswordInterface $password,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
   ) {
+    // @todo Don't export config variables in the constructor.
     $config = $config_factory->get('ce_ldap.settings');
-    $this->domain_component_root = $config->get('domain_component_root');
-    $this->people_base = $config->get('people_base');
-    $this->disabled_users_base = $config->get('disabled_users_base');
+    $this->domainComponentRoot = $config->get('domain_component_root');
+    $this->peopleBase = $config->get('people_base');
+    $this->disabledUsersBase = $config->get('disabled_users_base');
     $this->ldapServer = $ldapServer;
     $this->messenger = $messenger;
     $this->passwordGenerator = $passwordGenerator;
@@ -86,7 +104,7 @@ class LdapUserService extends AbstractLdapService {
    *   The user object.
    */
   public function getUserByUid(string $uid) : User {
-    $base = sprintf('uid=%s,' . $this->people_base, $uid);
+    $base = sprintf('uid=%s,' . $this->peopleBase, $uid);
     $ldapUser = $this->ldapServer->read($base);
 
     $userDto = LdapDto::createFromArray($ldapUser);
@@ -106,7 +124,7 @@ class LdapUserService extends AbstractLdapService {
    *   The user object.
    */
   public function getUserByNumericUid(int $uidnumber, bool $raw = FALSE) {
-    $base = $this->people_base;
+    $base = $this->peopleBase;
     $filter = '(&(objectClass=*)(uidNumber=' . $uidnumber . '))';
     $ldapSearch = $this->ldapServer->list($base, $filter);
     if (!empty($ldapSearch)) {
@@ -133,7 +151,7 @@ class LdapUserService extends AbstractLdapService {
    *   The user object.
    */
   public function getUserByMail(string $mail) {
-    $base = $this->people_base;
+    $base = $this->peopleBase;
     $filter = '(&(objectClass=*)(mail=' . $mail . '))';
     $ldapSearch = $this->ldapServer->list($base, $filter);
     if (!empty($ldapSearch)) {
@@ -156,7 +174,7 @@ class LdapUserService extends AbstractLdapService {
    *   The users corresponding to the search parameter.
    */
   public function getUsersfromGroupId(string $gid) : array {
-    $base = $this->people_base;
+    $base = $this->peopleBase;
     $filter = '(&(objectClass=*)(gidNumber=' . $gid . '))';
 
     return $this->ldapServer->list($base, $filter);
@@ -172,7 +190,7 @@ class LdapUserService extends AbstractLdapService {
    *   The users corresponding to the search parameter.
    */
   public function getDisabledUsersfromGroupId(string $gid): array {
-    $base = $this->disabled_users_base;
+    $base = $this->disabledUsersBase;
     $filter = '(&(objectClass=*)(gidNumber=' . $gid . '))';
 
     return $this->ldapServer->list($base, $filter);
@@ -185,7 +203,7 @@ class LdapUserService extends AbstractLdapService {
    *   The int to be used as the next uidNumber.
    */
   public function getNextUid(): int {
-    $base = $this->domain_component_root;
+    $base = $this->domainComponentRoot;
     $filter = '(objectClass=posixAccount)';
     $uid = 0;
     $uids = $this->ldapServer->list($base, $filter, ['uidNumber']);
@@ -212,7 +230,7 @@ class LdapUserService extends AbstractLdapService {
    *   if the user has been created.
    */
   public function createUser(array $user) {
-    $dn = 'uid=' . $user['uid'] . ',' . $this->people_base;
+    $dn = 'uid=' . $user['uid'] . ',' . $this->peopleBase;
     $user['uidNumber'] = $this->getNextUid();
     $user['objectClass'][] = 'inetOrgPerson';
     $user['objectClass'][] = 'posixAccount';
@@ -301,7 +319,7 @@ class LdapUserService extends AbstractLdapService {
     if (!array_search('shadowAccount', $disabledUser['objectclass'])) {
       $disabledUser['objectclass'][] = 'shadowAccount';
     }
-    $disabledDn = 'uid=' . $disabledUser['uid'] . ',' . $this->disabled_users_base;
+    $disabledDn = 'uid=' . $disabledUser['uid'] . ',' . $this->disabledUsersBase;
     if (!$this->ldapServer->create($disabledDn, $disabledUser)) {
       $this->messenger->addWarning($this->t('Disabled user could not be created'));
     }
