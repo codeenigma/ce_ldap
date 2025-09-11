@@ -12,6 +12,13 @@ namespace Drupal\ce_ldap\Dto;
 final class LdapDto {
 
   /**
+   * The properties of the LDAP return.
+   *
+   * @var array
+   */
+  private $properties = [];
+
+  /**
    * Creates a generic data transfer object with data received from LDAP.
    *
    * LDAP returns a array of data with mixed integer and string keys: each
@@ -31,11 +38,8 @@ final class LdapDto {
    *  - objectclass = ['count' => 2, 0 => 'inetOrgPerson', 1 => 'posixAccount']
    *  becomes $user->objectclass = [0 => 'inetOrgPerson', 1 => 'posixAccount']
    *
-   *  Integer keyed elements of the array are discarded, the don't contain
+   *  Integer keyed elements of the array are discarded, they don't contain
    *  anything useful. The count element is also discarded.
-   *
-   * @todo Fix function return type is not void, but function is returning void
-   * here.
    *
    * @param array<mixed, mixed> $entry
    *   An array of data as returned by a single element of ldap_get_entries().
@@ -58,16 +62,16 @@ final class LdapDto {
           }
 
           if ($property['count'] === 1) {
-            $dto->{$key} = $property[0];
+            $dto->properties[$key] = $property[0];
             break;
           }
 
           unset($property['count']);
-          $dto->{$key} = $property;
+          $dto->properties[$key] = $property;
           break;
 
         default:
-          $dto->{$key} = $property;
+          $dto->properties[$key] = $property;
           break;
       }
     });
@@ -87,8 +91,8 @@ final class LdapDto {
    *   The value, if it exists (or the default).
    */
   public function get(string $property, $default = '') {
-    if (property_exists($this, $property)) {
-      return $this->{$property};
+    if (isset($this->properties[$property])) {
+      return $this->properties[$property];
     }
 
     return $default;

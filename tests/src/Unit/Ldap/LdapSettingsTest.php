@@ -14,8 +14,12 @@ use Drupal\Tests\UnitTestCase;
 final class LdapSettingsTest extends UnitTestCase {
 
   private const HOST = 'ldaps://example.com';
+
   private const DN = 'cn=admin,dc=example,dc=com';
+
   private const PASSWORD = 'not4re4lpa55w0rd';
+
+  private const PORT = 636;
 
   /**
    * The happy settings creation path.
@@ -27,6 +31,7 @@ final class LdapSettingsTest extends UnitTestCase {
       'ldap' =>
         [
           'host' => self::HOST,
+          'port' => self::PORT,
           'dn' => self::DN,
           'password' => self::PASSWORD,
         ],
@@ -114,6 +119,28 @@ final class LdapSettingsTest extends UnitTestCase {
   }
 
   /**
+   * Attempt to create settings with malformed port throws exception.
+   *
+   * @test
+   */
+  public function portSettingIsMalformedThrowsException() {
+    $settings = new Settings([
+      'ldap' =>
+        [
+          'host' => self::HOST,
+          'port' => 234908574095,
+          'dn' => self::DN,
+          'password' => self::PASSWORD,
+        ],
+    ]);
+
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('LDAP port setting must be a valid port number.');
+
+    new LdapSettings($settings);
+  }
+
+  /**
    * Attempt to create settings with missing dn throws exception.
    *
    * @test
@@ -123,6 +150,7 @@ final class LdapSettingsTest extends UnitTestCase {
       'ldap' =>
         [
           'host' => self::HOST,
+          'port' => self::PORT,
           'password' => self::PASSWORD,
         ],
     ]);
@@ -143,6 +171,7 @@ final class LdapSettingsTest extends UnitTestCase {
       'ldap' =>
         [
           'host' => self::HOST,
+          'port' => self::PORT,
           'dn' => '',
           'password' => self::PASSWORD,
         ],
@@ -164,6 +193,7 @@ final class LdapSettingsTest extends UnitTestCase {
       'ldap' =>
         [
           'host' => self::HOST,
+          'port' => self::PORT,
           'dn' => self::DN,
         ],
     ]);
@@ -184,6 +214,7 @@ final class LdapSettingsTest extends UnitTestCase {
       'ldap' =>
         [
           'host' => self::HOST,
+          'port' => self::PORT,
           'dn' => self::DN,
           'password' => '',
         ],

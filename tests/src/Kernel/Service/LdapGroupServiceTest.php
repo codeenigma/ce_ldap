@@ -55,7 +55,8 @@ final class LdapGroupServiceTest extends KernelTestBase {
    */
   public function itCanGetGroupByCommonName() {
     $this->ldapServerMock->method('read')->willReturn($this->groupComplete);
-    $ldapGroupService = new LdapGroupService($this->ldapServerMock);
+
+    $ldapGroupService = new LdapGroupService($this->ldapServerMock, $this->container->get('config.factory'));
 
     $group = $ldapGroupService->getGroupByCommonName('dirpal');
 
