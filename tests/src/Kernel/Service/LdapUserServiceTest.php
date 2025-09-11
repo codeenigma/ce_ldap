@@ -91,7 +91,13 @@ final class LdapUserServiceTest extends KernelTestBase {
    */
   public function itCanGetUserByUid() {
     $this->ldapServerMock->method('read')->willReturn($this->userComplete);
-    $ldapUserService = new LdapUserService($this->ldapServerMock, $this->messengerMock, $this->passwordGeneratorMock, $this->passwordMock);
+    $ldapUserService = new LdapUserService(
+      $this->ldapServerMock,
+      $this->messengerMock,
+      $this->passwordGeneratorMock,
+      $this->passwordMock,
+      $this->container->get('config.factory')
+    );
 
     $user = $ldapUserService->getUserByUid('chris');
 
@@ -108,7 +114,13 @@ final class LdapUserServiceTest extends KernelTestBase {
    */
   public function thatMissingDataIsHandledGraceFully() {
     $this->ldapServerMock->method('read')->willReturn($this->userPartial);
-    $ldapUserService = new LdapUserService($this->ldapServerMock, $this->messengerMock, $this->passwordGeneratorMock, $this->passwordMock);
+    $ldapUserService = new LdapUserService(
+      $this->ldapServerMock,
+      $this->messengerMock,
+      $this->passwordGeneratorMock,
+      $this->passwordMock,
+      $this->container->get('config.factory')
+    );
 
     $user = $ldapUserService->getUserByUid('chris');
 
